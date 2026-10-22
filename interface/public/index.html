@@ -10,8 +10,8 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23090c0a'/%3E%3Cpath d='m7 10 10 10L7 30M22 30h12' fill='none' stroke='%23b6f658' stroke-width='3.5'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="/styles.css" />
-    <script type="module" src="/app.js"></script>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
   </head>
   <body>
     <svg
@@ -105,7 +105,7 @@
         hidden
       ></button>
       <aside id="sidebar" class="sidebar" aria-label="会话导航">
-        <a class="brand" href="/" aria-label="拆拆首页">
+        <a class="brand" href="./" aria-label="拆拆首页">
           <svg class="brand-symbol" aria-hidden="true">
             <use href="#i-mark" />
           </svg>
@@ -130,7 +130,10 @@
             ><span id="sidebar-config-dot" class="status-dot"></span>
           </button>
           <div class="local-caption">
-            <span class="local-dot"></span>LOCAL WORKSPACE<span>v0.1</span>
+            <span class="local-dot"></span
+            ><span id="sidebar-mode-label" data-browser-text="BROWSER CHAT"
+              >LOCAL WORKSPACE</span
+            ><span>v0.1</span>
           </div>
         </div>
       </aside>
@@ -146,7 +149,11 @@
             >
               <svg class="icon" aria-hidden="true"><use href="#i-menu" /></svg>
             </button>
-            <span class="workspace-label">workspace</span
+            <span
+              id="workspace-mode-label"
+              class="workspace-label"
+              data-browser-text="web chat"
+              >workspace</span
             ><span class="topbar-slash">/</span
             ><span id="conversation-title" class="conversation-title"
               >新对话</span
@@ -180,8 +187,32 @@
                 <use href="#i-download" />
               </svg>
             </button>
+            <a
+              id="source-link"
+              class="source-link"
+              href="https://github.com/bankskurtzyulma843-hash/chaichai-workspace"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="查看拆拆对话工作台源码"
+              title="项目源码"
+              ><span>源码</span
+              ><svg class="icon" aria-hidden="true"><use href="#i-code" /></svg
+            ></a>
           </div>
         </header>
+        <aside id="browser-mode-note" class="browser-mode-note" hidden>
+          <span class="mode-note-label">网页对话</span>
+          <span id="browser-mode-summary"
+            >配置 API 即可对话；本机拆拆工具需本地运行。</span
+          >
+          <a
+            id="local-mode-entry"
+            href="https://github.com/bankskurtzyulma843-hash/chaichai-workspace#readme"
+            target="_blank"
+            rel="noopener noreferrer"
+            >本地完整工具 ↗</a
+          >
+        </aside>
         <div
           id="connection-banner"
           class="connection-banner"
@@ -195,57 +226,85 @@
         <div id="scroll-area" class="scroll-area">
           <section id="welcome" class="welcome" aria-labelledby="welcome-title">
             <div class="terminal-path">
-              <span>chaichai@local</span><span>:~$</span>
+              <span id="terminal-host" data-browser-text="chaichai@browser"
+                >chaichai@local</span
+              ><span>:~$</span>
             </div>
             <h1 id="welcome-title" class="welcome-wordmark">
               拆拆<span class="terminal-cursor" aria-hidden="true">_</span>
             </h1>
-            <p class="welcome-description">输入目标。提出问题。查看证据。</p>
+            <p
+              id="welcome-description"
+              class="welcome-description"
+              data-browser-text="配置模型 API，直接开始对话。"
+            >
+              输入目标。提出问题。查看证据。
+            </p>
             <div class="quickstart-heading">
               <span>// 快速开始</span><span>SELECT A TASK</span>
             </div>
             <div class="suggestions" aria-label="试试这些问题">
               <button
+                id="suggestion-analyze"
                 class="suggestion"
                 data-prompt="帮我拆解一个本地应用。请先询问应用路径和我的分析目标，再检查可用工具。"
+                data-browser-prompt="帮我分析一段代码。请先询问我要粘贴的代码和关注的问题，然后依据我提供的材料解释实现。不要声称访问本机文件或运行工具。"
               >
                 <span class="suggestion-index">01</span
                 ><span class="suggestion-command">analyze</span
                 ><span class="suggestion-info"
-                  ><strong>拆解应用</strong><span>安装包 / 本地应用</span></span
+                  ><strong data-browser-text="分析代码">拆解应用</strong
+                  ><span data-browser-text="粘贴片段 / 理解实现"
+                    >安装包 / 本地应用</span
+                  ></span
                 ><svg class="icon suggestion-arrow" aria-hidden="true">
                   <use href="#i-arrow-right" />
                 </svg>
               </button>
               <button
+                id="suggestion-trace"
                 class="suggestion"
                 data-prompt="我想理解某个功能的实现方式。请先询问目标文件或应用路径、功能名称和我已知的线索，再从证据中追踪实现。"
+                data-browser-prompt="帮我梳理一个功能的实现思路。请先询问功能目标与我可以提供的代码或资料，区分材料中的事实与方案建议。"
               >
                 <span class="suggestion-index">02</span
                 ><span class="suggestion-command">trace</span
                 ><span class="suggestion-info"
-                  ><strong>追踪功能</strong
-                  ><span>实现 / 依赖 / 调用关系</span></span
+                  ><strong data-browser-text="梳理功能">追踪功能</strong
+                  ><span data-browser-text="描述需求 / 讨论方案"
+                    >实现 / 依赖 / 调用关系</span
+                  ></span
                 ><svg class="icon suggestion-arrow" aria-hidden="true">
                   <use href="#i-arrow-right" />
                 </svg>
               </button>
               <button
+                id="suggestion-compare"
                 class="suggestion"
                 data-prompt="帮我比较同一个应用的两个版本。请先询问两个版本的文件路径和我关注的变化，并区分已确认的差异与推测。"
+                data-browser-prompt="帮我比较两段代码或两份资料。请先询问我要粘贴的内容和关注的差异，仅依据已提供的材料比较。"
               >
                 <span class="suggestion-index">03</span
                 ><span class="suggestion-command">compare</span
                 ><span class="suggestion-info"
-                  ><strong>比较版本</strong
-                  ><span>变更 / 差异 / 证据</span></span
+                  ><strong data-browser-text="比较材料">比较版本</strong
+                  ><span data-browser-text="两段内容 / 差异说明"
+                    >变更 / 差异 / 证据</span
+                  ></span
                 ><svg class="icon suggestion-arrow" aria-hidden="true">
                   <use href="#i-arrow-right" />
                 </svg>
               </button>
             </div>
             <p class="welcome-footnote">
-              <span>[ local ]</span> 连接自己的模型 API，按需调用拆拆工具。
+              <span id="welcome-mode-label" data-browser-text="[ web ]"
+                >[ local ]</span
+              >
+              <span
+                id="welcome-mode-description"
+                data-browser-text="浏览器直连你的 API；本机工具通过本地版使用。"
+                >连接自己的模型 API，按需调用拆拆工具。</span
+              >
             </p>
           </section>
           <section
@@ -266,10 +325,17 @@
           <form id="composer" class="composer">
             <div class="composer-heading">
               <span class="command-prefix" aria-hidden="true">❯</span
-              ><span>输入目标或问题</span
+              ><span
+                id="composer-input-label"
+                data-browser-text="输入问题或粘贴材料"
+                >输入目标或问题</span
               ><span class="composer-mode">CHAT</span>
             </div>
-            <label class="sr-only" for="message-input"
+            <label
+              id="message-input-label"
+              class="sr-only"
+              for="message-input"
+              data-browser-text="输入你的问题或材料"
               >输入拆解目标或问题</label
             >
             <textarea
@@ -277,6 +343,7 @@
               name="message"
               rows="2"
               placeholder="描述你想拆解的目标，或粘贴本地文件路径…"
+              data-browser-placeholder="输入问题，或粘贴想分析的代码和资料…"
               maxlength="100000"
               autocomplete="off"
             ></textarea>
@@ -284,9 +351,12 @@
               <span class="composer-context"
                 ><svg class="icon" aria-hidden="true">
                   <use href="#i-tool" /></svg
-                ><span>拆拆工具</span
+                ><span id="composer-context-label" data-browser-text="模型对话"
+                  >拆拆工具</span
                 ><span class="composer-context-separator">/</span
-                ><span>按需调用</span></span
+                ><span id="composer-context-detail" data-browser-text="API 直连"
+                  >按需调用</span
+                ></span
               >
               <div class="composer-send">
                 <span class="keyboard-hint"
@@ -314,20 +384,24 @@
             </div>
           </form>
           <p class="composer-note">
-            问题与工具结果将发送到你配置的 API。<button
-              id="footer-settings"
-              type="button"
-            >
-              管理连接 ↗
-            </button>
+            <span
+              id="composer-privacy-note"
+              data-browser-text="消息将从浏览器直接发送到你配置的 API。"
+              >问题与工具结果将发送到你配置的 API。</span
+            ><button id="footer-settings" type="button">管理连接 ↗</button>
           </p>
         </footer>
       </main>
     </div>
 
     <footer class="systembar" aria-label="工作台状态">
-      <span><i aria-hidden="true"></i>本地运行</span
-      ><span>CHAICHAI / TERMINAL</span
+      <span
+        ><i aria-hidden="true"></i
+        ><span id="runtime-mode-label" data-browser-text="网页运行"
+          >本地运行</span
+        ></span
+      ><span id="systembar-product" data-browser-text="CHAICHAI / WEB CHAT"
+        >CHAICHAI / TERMINAL</span
       ><span>UTF-8<span class="systembar-divider">/</span>BYO API</span>
     </footer>
 
@@ -354,7 +428,13 @@
             <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
           </button>
         </header>
-        <p class="settings-intro">填入服务商信息，使用自己的模型。</p>
+        <p
+          id="settings-intro"
+          class="settings-intro"
+          data-browser-text="填入支持浏览器跨域请求的服务商接口，使用自己的模型。"
+        >
+          填入服务商信息，使用自己的模型。
+        </p>
         <form id="settings-form" novalidate>
           <div class="form-field">
             <label for="base-url">API 地址 <span>01 / BASE URL</span></label
@@ -367,7 +447,11 @@
               spellcheck="false"
               required
             />
-            <p class="field-hint">
+            <p
+              id="api-protocol-hint"
+              class="field-hint"
+              data-browser-text="支持允许跨域 CORS 的 OpenAI 兼容接口，可填 /v1 前缀或完整接口地址。"
+            >
               支持 OpenAI 兼容接口，可填写 /v1 前缀或完整接口地址。
             </p>
           </div>
@@ -406,11 +490,20 @@
               spellcheck="false"
               required
             />
-            <p class="field-hint">选择支持工具调用（tool calling）的模型。</p>
+            <p
+              id="model-capability-hint"
+              class="field-hint"
+              data-browser-text="使用 Chat Completions 兼容模型。网页模式不调用本机工具。"
+            >
+              选择支持工具调用（tool calling）的模型。
+            </p>
           </div>
           <div class="connection-note">
             <svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg>
-            <p>
+            <p
+              id="api-privacy-note"
+              data-browser-text="Key 仅在当前网页内存中，刷新后清除。对话记录保存在此浏览器；消息直接发送至你配置的 API。"
+            >
               Key
               不写入浏览器存储或配置文件。对话记录保存在此浏览器，模型会接收你的问题与工具结果。
             </p>
@@ -439,13 +532,17 @@
               </svg>
             </button>
           </div>
-          <p class="test-disclosure">
+          <p id="test-request-notice" class="test-disclosure">
             测试会发送一条简短模型请求，可能产生用量。
           </p>
         </form>
         <div class="drawer-bottom">
           <div>
-            <span class="drawer-bottom-label">MCP STATUS</span
+            <span
+              id="tool-status-label"
+              class="drawer-bottom-label"
+              data-browser-text="TOOL MODE"
+              >MCP STATUS</span
             ><span id="settings-tools-status">正在检查本地工具</span>
           </div>
           <button id="forget-config" class="text-button" type="button" hidden>

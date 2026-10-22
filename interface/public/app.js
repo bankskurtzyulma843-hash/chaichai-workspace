@@ -1,5 +1,11 @@
+import { createBrowserClient } from "./browser-client.js";
+
+const browserMode = document.documentElement.dataset.mode === "browser";
+const browserClient = browserMode ? createBrowserClient() : null;
 const $ = (selector) => document.querySelector(selector);
-const storageKey = "chaichai.interface.conversations.v1";
+const storageKey = browserMode
+  ? "chaichai.web.conversations.v1"
+  : "chaichai.interface.conversations.v1";
 const svgNamespace = "http://www.w3.org/2000/svg";
 const ui = {
   sidebar: $("#sidebar"),
@@ -658,6 +664,7 @@ function resizeInput() {
 }
 
 async function api(path, { method = "GET", body, signal } = {}) {
+  if (browserClient) return browserClient.api(path, { method, body, signal });
   let response;
   try {
     response = await fetch(path, {
@@ -702,11 +709,13 @@ function renderConnection() {
   $("#sidebar-config-dot").className =
     `status-dot${configured ? " ready" : ""}`;
   const ready = state.mcp.status === "ready";
-  const label = ready
-    ? `${state.mcp.toolCount} 个工具就绪`
-    : state.mcp.status === "error"
-      ? "工具连接异常"
-      : "工具待连接";
+  const label = browserMode
+    ? "网页对话"
+    : ready
+      ? `${state.mcp.toolCount} 个工具就绪`
+      : state.mcp.status === "error"
+        ? "工具连接异常"
+        : "工具待连接";
   $("#tools-status").replaceChildren(
     element(
       "span",
@@ -739,14 +748,17 @@ async function refreshState() {
     renderConnection();
   } catch (error) {
     state.connected = false;
-    $("#connection-message").textContent =
-      `暂时无法连接本地服务。${error.message}`;
+    $("#connection-message").textContent = browserMode
+      ? `网页状态初始化失败。${error.message}`
+      : `暂时无法连接本地服务。${error.message}`;
     $("#connection-banner").hidden = false;
     $("#tools-status").replaceChildren(
       element("span", "status-dot error"),
-      element("span", "", "服务未连接"),
+      element("span", "", browserMode ? "网页初始化失败" : "服务未连接"),
     );
-    $("#settings-tools-status").textContent = "本地服务未连接";
+    $("#settings-tools-status").textContent = browserMode
+      ? "网页状态初始化失败"
+      : "本地服务未连接";
   } finally {
     $("#retry-connection").disabled = false;
   }
@@ -766,9 +778,12 @@ function updateKeyHint() {
   ui.apiKey.placeholder = retained
     ? "已配置 · 留空可继续使用"
     : "输入你的 API Key";
+  const memory = browserMode
+    ? "当前页面内存中，刷新后需重填"
+    : "本次本地服务内存中";
   $("#key-hint").textContent = retained
-    ? "此地址已有 Key。留空保留，填写可替换；Key 仅保留在本次本地服务内存中。"
-    : "Key 仅保留在本次本地服务内存中。";
+    ? `此地址已有 Key。留空保留，填写可替换；Key 仅保留在${memory}。`
+    : `Key 仅保留在${memory}。`;
 }
 
 function openSettings() {
@@ -1062,31 +1077,32 @@ async function sendMessage(event) {
     updateRunControls();
   };
   try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      credentials: "same-origin",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "text/event-stream",
-      },
-      body: JSON.stringify({
-        conversationId: conversation.id,
-        message: text,
-        history,
-      }),
-    });
-    if (!response.ok) {
-      let message = `请求失败（${response.status}），请重试。`;
-      try {
-        const result = await response.json();
-        message = result.error?.message || message;
-      } catch {
-        /* Use HTTP error text. */
+    const input = { conversationId: conversation.id, message: text, history };
+    if (browserClient) {
+      await browserClient.chat(input, { signal: controller.signal, onEvent });
+    } else {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        credentials: "same-origin",
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "text/event-stream",
+        },
+        body: JSON.stringify(input),
+      });
+      if (!response.ok) {
+        let message = `请求失败（${response.status}），请重试。`;
+        try {
+          const result = await response.json();
+          message = result.error?.message || message;
+        } catch {
+          /* Use HTTP error text. */
+        }
+        throw new Error(message);
       }
-      throw new Error(message);
+      await readEventStream(response, onEvent);
     }
-    await readEventStream(response, onEvent);
     if (!run.complete) {
       assistant.status = run.stopping ? "cancelled" : "error";
       if (!run.stopping)
@@ -1249,6 +1265,17 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setSidebar(false);
 });
 window.addEventListener("pagehide", saveHistory);
+
+if (browserMode) {
+  document.title = "拆拆 · 网页对话工作台";
+  for (const node of document.querySelectorAll("[data-browser-text]"))
+    node.textContent = node.dataset.browserText;
+  for (const node of document.querySelectorAll("[data-browser-placeholder]"))
+    node.placeholder = node.dataset.browserPlaceholder;
+  for (const node of document.querySelectorAll("[data-browser-prompt]"))
+    node.dataset.prompt = node.dataset.browserPrompt;
+  $("#browser-mode-note").hidden = false;
+}
 
 readHistory();
 if (!state.conversations.length) createConversation();

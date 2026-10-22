@@ -6,7 +6,8 @@
   "description": "拆拆的独立本地 API 配置与对话界面",
   "scripts": {
     "start": "node server.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "build:web": "node build-web.mjs"
   },
   "engines": {
     "node": ">=24.18.0"
