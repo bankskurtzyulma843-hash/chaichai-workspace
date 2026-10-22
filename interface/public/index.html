@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#090c0a" />
+    <title>拆拆 ChaiChai / Terminal</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23090c0a'/%3E%3Cpath d='m7 10 10 10L7 30M22 30h12' fill='none' stroke='%23b6f658' stroke-width='3.5'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <svg
+      class="icon-sprite"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <symbol id="i-mark" viewBox="0 0 40 40">
+        <path
+          d="m7 10 10 10L7 30M22 30h12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3.5"
+          stroke-linecap="square"
+          stroke-linejoin="miter"
+        />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24">
+        <path
+          d="m9 4 .6-2h4.8l.6 2 2 1.1 2.1-.4 2.4 4.2-1.4 1.6v2.4l1.4 1.6-2.4 4.2-2.1-.4-2 1.1-.6 2H9l-.6-2-2-1.1-2.1.4-2.4-4.2 1.4-1.6v-2.4L1.9 8.9l2.4-4.2 2.1.4Z"
+          transform="translate(1 1) scale(.9)"
+        />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M12 19V5m-6 6 6-6 6 6" />
+      </symbol>
+      <symbol id="i-arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24">
+        <path d="m9 5 7 7-7 7" />
+      </symbol>
+      <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M6 18 18 6" />
+      </symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24">
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <rect x="8" y="8" width="12" height="12" rx="2" />
+        <path d="M16 8V4H4v12h4" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7" />
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
+      </symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24">
+        <path
+          d="M20 14a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h9a4 4 0 0 1 4 4Z"
+        />
+      </symbol>
+      <symbol id="i-code" viewBox="0 0 24 24">
+        <path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" />
+      </symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24">
+        <path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="10" cy="10" r="6" />
+        <path d="m15 15 6 6" />
+      </symbol>
+      <symbol id="i-tool" viewBox="0 0 24 24">
+        <path
+          d="m14 6-3 3 4 4 3-3a6 6 0 0 1-7 7l-5 5-4-4 5-5A6 6 0 0 1 14 6Z"
+          transform="translate(1 -2) scale(.95)"
+        />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6Z" />
+        <path d="m8 12 3 3 5-6" />
+      </symbol>
+    </svg>
+    <div class="workspace">
+      <button
+        id="sidebar-backdrop"
+        class="sidebar-backdrop"
+        aria-label="关闭会话菜单"
+        hidden
+      ></button>
+      <aside id="sidebar" class="sidebar" aria-label="会话导航">
+        <a class="brand" href="/" aria-label="拆拆首页">
+          <svg class="brand-symbol" aria-hidden="true">
+            <use href="#i-mark" />
+          </svg>
+          <span>拆拆<span class="brand-en">CHAICHAI</span></span>
+        </a>
+        <div class="sidebar-section-label">
+          <span>EXPLORER</span><span>会话</span>
+        </div>
+        <button id="new-chat" class="new-chat">
+          <svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg
+          ><span>新建会话</span><kbd>⌘ K</kbd>
+        </button>
+        <nav
+          id="conversation-list"
+          class="conversation-list"
+          aria-label="历史对话"
+        ></nav>
+        <div class="sidebar-footer">
+          <button id="open-settings" class="settings-entry">
+            <svg class="icon" aria-hidden="true"><use href="#i-settings" /></svg
+            ><span>API 配置</span
+            ><span id="sidebar-config-dot" class="status-dot"></span>
+          </button>
+          <div class="local-caption">
+            <span class="local-dot"></span>LOCAL WORKSPACE<span>v0.1</span>
+          </div>
+        </div>
+      </aside>
+
+      <main id="main" class="main">
+        <header class="topbar">
+          <div class="topbar-leading">
+            <button
+              id="toggle-sidebar"
+              class="icon-button mobile-menu"
+              aria-label="打开会话菜单"
+              aria-expanded="false"
+            >
+              <svg class="icon" aria-hidden="true"><use href="#i-menu" /></svg>
+            </button>
+            <span class="workspace-label">workspace</span
+            ><span class="topbar-slash">/</span
+            ><span id="conversation-title" class="conversation-title"
+              >新对话</span
+            >
+          </div>
+          <div class="topbar-actions">
+            <span
+              id="tools-status"
+              class="tools-status"
+              title="正在检查拆拆工具状态"
+              ><span class="status-dot"></span><span>连接中</span></span
+            >
+            <button
+              id="model-button"
+              class="model-button"
+              aria-label="打开 API 配置"
+            >
+              <span id="model-label">配置模型</span
+              ><svg class="icon" aria-hidden="true">
+                <use href="#i-chevron" />
+              </svg>
+            </button>
+            <button
+              id="export-chat"
+              class="icon-button export-button"
+              aria-label="导出当前对话"
+              title="导出 Markdown"
+              hidden
+            >
+              <svg class="icon" aria-hidden="true">
+                <use href="#i-download" />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <div
+          id="connection-banner"
+          class="connection-banner"
+          role="status"
+          hidden
+        >
+          <span id="connection-message"></span
+          ><button id="retry-connection" type="button">重新连接</button>
+        </div>
+
+        <div id="scroll-area" class="scroll-area">
+          <section id="welcome" class="welcome" aria-labelledby="welcome-title">
+            <div class="terminal-path">
+              <span>chaichai@local</span><span>:~$</span>
+            </div>
+            <h1 id="welcome-title" class="welcome-wordmark">
+              拆拆<span class="terminal-cursor" aria-hidden="true">_</span>
+            </h1>
+            <p class="welcome-description">输入目标。提出问题。查看证据。</p>
+            <div class="quickstart-heading">
+              <span>// 快速开始</span><span>SELECT A TASK</span>
+            </div>
+            <div class="suggestions" aria-label="试试这些问题">
+              <button
+                class="suggestion"
+                data-prompt="帮我拆解一个本地应用。请先询问应用路径和我的分析目标，再检查可用工具。"
+              >
+                <span class="suggestion-index">01</span
+                ><span class="suggestion-command">analyze</span
+                ><span class="suggestion-info"
+                  ><strong>拆解应用</strong><span>安装包 / 本地应用</span></span
+                ><svg class="icon suggestion-arrow" aria-hidden="true">
+                  <use href="#i-arrow-right" />
+                </svg>
+              </button>
+              <button
+                class="suggestion"
+                data-prompt="我想理解某个功能的实现方式。请先询问目标文件或应用路径、功能名称和我已知的线索，再从证据中追踪实现。"
+              >
+                <span class="suggestion-index">02</span
+                ><span class="suggestion-command">trace</span
+                ><span class="suggestion-info"
+                  ><strong>追踪功能</strong
+                  ><span>实现 / 依赖 / 调用关系</span></span
+                ><svg class="icon suggestion-arrow" aria-hidden="true">
+                  <use href="#i-arrow-right" />
+                </svg>
+              </button>
+              <button
+                class="suggestion"
+                data-prompt="帮我比较同一个应用的两个版本。请先询问两个版本的文件路径和我关注的变化，并区分已确认的差异与推测。"
+              >
+                <span class="suggestion-index">03</span
+                ><span class="suggestion-command">compare</span
+                ><span class="suggestion-info"
+                  ><strong>比较版本</strong
+                  ><span>变更 / 差异 / 证据</span></span
+                ><svg class="icon suggestion-arrow" aria-hidden="true">
+                  <use href="#i-arrow-right" />
+                </svg>
+              </button>
+            </div>
+            <p class="welcome-footnote">
+              <span>[ local ]</span> 连接自己的模型 API，按需调用拆拆工具。
+            </p>
+          </section>
+          <section
+            id="messages"
+            class="messages"
+            aria-label="对话内容"
+            hidden
+          ></section>
+        </div>
+
+        <footer class="composer-footer">
+          <div
+            id="generation-status"
+            class="generation-status"
+            role="status"
+            aria-live="polite"
+          ></div>
+          <form id="composer" class="composer">
+            <div class="composer-heading">
+              <span class="command-prefix" aria-hidden="true">❯</span
+              ><span>输入目标或问题</span
+              ><span class="composer-mode">CHAT</span>
+            </div>
+            <label class="sr-only" for="message-input"
+              >输入拆解目标或问题</label
+            >
+            <textarea
+              id="message-input"
+              name="message"
+              rows="2"
+              placeholder="描述你想拆解的目标，或粘贴本地文件路径…"
+              maxlength="100000"
+              autocomplete="off"
+            ></textarea>
+            <div class="composer-toolbar">
+              <span class="composer-context"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-tool" /></svg
+                ><span>拆拆工具</span
+                ><span class="composer-context-separator">/</span
+                ><span>按需调用</span></span
+              >
+              <div class="composer-send">
+                <span class="keyboard-hint"
+                  >Enter 发送 · Shift + Enter 换行</span
+                ><button
+                  id="send-button"
+                  class="send-button"
+                  type="submit"
+                  aria-label="发送消息"
+                >
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#i-arrow" />
+                  </svg></button
+                ><button
+                  id="stop-button"
+                  class="send-button stop-button"
+                  type="button"
+                  aria-label="停止生成"
+                  title="停止生成"
+                  hidden
+                >
+                  <span></span>
+                </button>
+              </div>
+            </div>
+          </form>
+          <p class="composer-note">
+            问题与工具结果将发送到你配置的 API。<button
+              id="footer-settings"
+              type="button"
+            >
+              管理连接 ↗
+            </button>
+          </p>
+        </footer>
+      </main>
+    </div>
+
+    <footer class="systembar" aria-label="工作台状态">
+      <span><i aria-hidden="true"></i>本地运行</span
+      ><span>CHAICHAI / TERMINAL</span
+      ><span>UTF-8<span class="systembar-divider">/</span>BYO API</span>
+    </footer>
+
+    <dialog
+      id="settings-dialog"
+      class="settings-dialog"
+      aria-labelledby="settings-title"
+    >
+      <div class="drawer-content">
+        <header class="drawer-header">
+          <div>
+            <span class="drawer-eyebrow">CONNECTION / CONFIG</span>
+            <h2 id="settings-title">
+              连接模型 API<span class="terminal-cursor" aria-hidden="true"
+                >_</span
+              >
+            </h2>
+          </div>
+          <button
+            id="close-settings"
+            class="icon-button"
+            aria-label="关闭 API 配置"
+          >
+            <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+          </button>
+        </header>
+        <p class="settings-intro">填入服务商信息，使用自己的模型。</p>
+        <form id="settings-form" novalidate>
+          <div class="form-field">
+            <label for="base-url">API 地址 <span>01 / BASE URL</span></label
+            ><input
+              id="base-url"
+              name="baseUrl"
+              type="url"
+              placeholder="https://api.example.com/v1"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+            <p class="field-hint">
+              支持 OpenAI 兼容接口，可填写 /v1 前缀或完整接口地址。
+            </p>
+          </div>
+          <div class="form-field">
+            <label for="api-key">API Key <span>02 / TOKEN</span></label>
+            <div class="password-field">
+              <input
+                id="api-key"
+                name="apiKey"
+                type="password"
+                placeholder="输入你的 API Key"
+                autocomplete="new-password"
+                spellcheck="false"
+              /><button
+                id="toggle-key"
+                type="button"
+                class="icon-button"
+                aria-label="显示 API Key"
+                aria-pressed="false"
+              >
+                <svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg>
+              </button>
+            </div>
+            <p id="key-hint" class="field-hint">
+              本地接口可留空。Key 仅保留在本次本地服务内存中。
+            </p>
+          </div>
+          <div class="form-field">
+            <label for="model-name">模型名称 <span>03 / MODEL ID</span></label
+            ><input
+              id="model-name"
+              name="model"
+              type="text"
+              placeholder="填写服务商提供的模型 ID"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            />
+            <p class="field-hint">选择支持工具调用（tool calling）的模型。</p>
+          </div>
+          <div class="connection-note">
+            <svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg>
+            <p>
+              Key
+              不写入浏览器存储或配置文件。对话记录保存在此浏览器，模型会接收你的问题与工具结果。
+            </p>
+          </div>
+          <div
+            id="settings-feedback"
+            class="settings-feedback"
+            role="status"
+            aria-live="polite"
+            hidden
+          ></div>
+          <div class="settings-actions">
+            <button
+              id="test-connection"
+              class="button button-secondary"
+              type="button"
+            >
+              测试连接</button
+            ><button
+              id="save-settings"
+              class="button button-primary"
+              type="submit"
+            >
+              保存配置<svg class="icon" aria-hidden="true">
+                <use href="#i-arrow-right" />
+              </svg>
+            </button>
+          </div>
+          <p class="test-disclosure">
+            测试会发送一条简短模型请求，可能产生用量。
+          </p>
+        </form>
+        <div class="drawer-bottom">
+          <div>
+            <span class="drawer-bottom-label">MCP STATUS</span
+            ><span id="settings-tools-status">正在检查本地工具</span>
+          </div>
+          <button id="forget-config" class="text-button" type="button" hidden>
+            清除配置
+          </button>
+        </div>
+      </div>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>

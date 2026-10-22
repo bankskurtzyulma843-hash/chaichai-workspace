@@ -1,3 +1,64 @@
+# 拆拆对话工作台 · ChaiChai Workspace
+
+**自己配置模型 API，在本地用对话调用拆拆工具。**
+
+本仓库在 [hubooooooo/chaichai](https://github.com/hubooooooo/chaichai) 的 MIT 开源工具箱上，新增独立的 **API 配置与对话界面**。拆拆核心、工具实现和证据体系来自上游；本版本的扩展位于 [`interface/`](./interface/)。保留上游提交历史、版权及第三方许可。
+
+![拆拆对话工作台：极客风格的本地配置与对话页面](./interface/assets/terminal.png)
+
+## 本版本提供什么
+
+- **配置自己的 API**：填写服务地址、模型名与 Key，测试连接、保存或清除配置。
+- **对话调用工具**：流式显示回复，查看工具参数、结果与证据；需要确认的操作由用户批准或拒绝。
+- **管理本地会话**：新建、切换、删除会话，停止当前任务，复制回复或导出 Markdown。
+- **极客风格界面**：深色终端视觉、命令式任务入口，适配桌面与手机宽度。
+
+本版本以 **开源源码＋本地启动** 形式提供。网页服务与拆拆 MCP 子进程运行在使用者电脑上，默认只监听 `127.0.0.1`。
+
+## 从源码启动
+
+已验证环境为 **Apple 芯片 Mac、Node.js 24.18.0、npm 11.16.0**。项目开启 Node 版本校验；可用 nvm 按根目录 `.nvmrc` 切换 Node，确认 npm 版本后执行：
+
+```sh
+git clone https://github.com/bankskurtzyulma843-hash/chaichai-workspace.git
+cd chaichai-workspace
+npm ci
+npm run build:cached
+npm --prefix interface start
+```
+
+打开终端打印的地址，默认是 **http://127.0.0.1:4317**。依赖安装与构建完成后，也可在 Mac 上双击 [`interface/启动拆拆.command`](./interface/启动拆拆.command)。本仓库的命令会使用本仓构建的 MCP，无需替换已安装的拆拆或修改其他 AI 客户端配置。
+
+分析特定目标可能需要额外引擎，例如 JADX、Ghidra 或 Chrome。源码启动不自动安装这些工具；请按 [上游安装文档](./docs/installation.md) 准备具体任务需要的组件。
+
+## 配置模型并开始对话
+
+1. 打开页面右上角「API 配置」。
+2. 填写 **OpenAI 兼容 Chat Completions** 服务地址、支持 `tools` / function calling 的模型名及自己的 API Key。仅支持原生 Messages、Gemini 或 Responses 协议的接口暂不适用。
+3. 点击「测试连接」，成功后保存配置。连接测试与后续对话会实际调用所填服务，并按服务商规则计费。
+4. 输入分析问题；需要访问本地文件时提供该电脑上的真实绝对路径。工具调用记录可以展开，需要确认的调用会等待操作。
+
+API Key 仅保存在当前本地服务内存中，不写入磁盘或浏览器历史，服务重启后需重新填写。对话与工具记录保存在当前浏览器本地存储中；模型请求会将本轮对话和相关工具内容发送到你配置的 API 服务。详细行为与限制见 [`interface/README.md`](./interface/README.md)。
+
+## 验证与当前范围
+
+```sh
+npm --prefix interface test
+```
+
+界面层的 27 项自动测试已通过，覆盖配置隔离、流式工具调用、批准与拒绝、错误、取消与资源清理；模型部分使用本机确定性测试服务。真实本仓 MCP 已完成工具目录与会话连接检查。真实付费模型、带分析目标的完整任务及可选引擎仍需按服务与场景验证。
+
+## 来源与许可
+
+- 上游：[hubooooooo/chaichai](https://github.com/hubooooooo/chaichai)，本版本基于提交 `74ec6d0`。
+- 本次新增：独立的本地 API 配置、模型对话与 MCP 调用界面；上游核心保持原样。
+- 许可：[MIT](./LICENSE)。保留原版权声明；第三方组件见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+
+---
+
+<details>
+<summary>展开查看上游拆拆工具箱原始说明（其中安装命令指向上游，不包含本对话界面）</summary>
+
 <div align="center">
 
 # 拆拆 ChaiChai
@@ -259,3 +320,5 @@ node scripts/rea.mjs --help
 ## 许可证
 
 本项目以 MIT 许可证开源，详见 [LICENSE](LICENSE)。用到的第三方组件及其许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 和 [licenses/](licenses/)。
+
+</details>
